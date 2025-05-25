@@ -13,6 +13,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum TipoLink {
+  track
+  set
+  clipe
+}
+
 model Usuario {
   id          String       @id @map("_id") @default(auto()) @db.ObjectId
   nomeUsuario String       @unique
@@ -27,12 +33,12 @@ model Link {
   id          String       @id @map("_id") @default(auto()) @db.ObjectId
   usuarioId   String       @db.ObjectId
   usuario     Usuario      @relation(fields: [usuarioId], references: [id], name: "UsuarioLinks")
+  titulo      String
   url         String
-  titulo      String?
-  descricao   String?
-  tipo        TipoLink
-  tags        String[]
-  publico     Boolean      @default(false)
+  tipo        String
+  genero      String       // ex: techno, house, etc.
+  publico     Boolean      @default(true)
+  imagem      String?
   criadoEm    DateTime     @default(now())
   favoritos   Favorito[]   @relation("LinkFavoritos")
 }
@@ -44,10 +50,4 @@ model Favorito {
   linkId      String       @db.ObjectId
   link        Link         @relation(fields: [linkId], references: [id], name: "LinkFavoritos")
   criadoEm    DateTime     @default(now())
-}
-
-enum TipoLink {
-  track
-  set
-  clip
 }

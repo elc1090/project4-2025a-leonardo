@@ -1,0 +1,116 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+
+  text-align: center;
+}
+
+/* Centraliza o conteúdo na tela */
+.container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #262626; /* gray-100 */
+  flex-direction: column;
+  margin-top: -7%;
+}
+
+.logo {
+  height: 20em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #ff6464aa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #fb6161aa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+.input {
+  color: black;
+}
+
+
+/* Estilo do formulário */
+.form {
+  background-color: #282828;
+  margin-top: -5%;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+  margin-bottom: 5%;
+}
+
+/* Título do formulário */
+.title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #ffffff; /* gray-800 */
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+/* Campos de input */
+.input {
+  width: 100%;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  border: 1px solid #4d4d4d; /* gray-300 */
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  outline: none;
+  background-color: #3e3e3e;
+  color: #ffffff;
+}
+
+.input:focus {
+  border-color: #3b82f6; /* blue-500 */
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+}
+
+/* Botão de envio */
+.button {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #eb2525; /* blue-600 */
+  color: #363636;
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.button:hover {
+  background-color: rgb(121, 21, 21); /* blue-700 */
+}
