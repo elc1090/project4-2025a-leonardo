@@ -1,6 +1,8 @@
 const express = require('express')
 const { PrismaClient } = require('@prisma/client')
 const jwt = require('jsonwebtoken')
+const SECRET = 'chave'
+
 
 const app = express()
 const prisma = new PrismaClient()
@@ -105,18 +107,38 @@ async function gerarPreview(url) {
   }
 }
 
-// Listar links públicos (rota pública)
+// Listar links 
 app.get('/links', async (req, res) => {
+  const usuarioId = req.query.usuarioId; 
+
   try {
     const links = await prisma.link.findMany({
       where: { publico: true },
-      include: { usuario: true }
-    })
-    res.json(links)
+      include: {
+        usuario: true,
+        favoritos: {
+          where: { usuarioId: usuarioId } // sem Number()
+        }
+      }
+    });
+
+    const linksComCurtido = links.map(link => {
+      const { favoritos, ...resto } = link;
+      return {
+        ...resto,
+        curtido: favoritos.length > 0
+      };
+    });
+
+    res.json(linksComCurtido);
   } catch (error) {
-    res.status(500).json({ erro: error.message })
+    console.error('Erro na rota /links:', error); 
+    res.status(500).json({ erro: error.message });
   }
-})
+});
+
+
+
 
 app.listen(3000, () => {
   console.log('Servidor rodando na porta 3000')
@@ -126,3 +148,53 @@ const handleLogout = () => {
   localStorage.removeItem('token'); // Remove o token
   navigate('/login'); // Redireciona para a tela de login
 };
+
+app.post('/favoritos', autenticarToken, async (req, res) => {
+  const usuarioId = req.usuario.id;  
+  const { linkId } = req.body;
+
+  if (!usuarioId || !linkId) {
+    return res.status(400).json({ mensagem: 'Dados incompletos' });
+  }
+
+  try {
+    const favoritoExistente = await prisma.favorito.findFirst({
+      where: { usuarioId, linkId },
+    });
+
+    if (favoritoExistente) {
+      return res.status(400).json({ mensagem: 'Já curtido' });
+    }
+
+    const favorito = await prisma.favorito.create({
+      data: { usuarioId, linkId },
+    });
+
+    res.json(favorito);
+  } catch (error) {
+    console.error('Erro ao curtir:', error);  
+    res.status(500).json({ mensagem: 'Erro ao curtir' });
+  }
+});
+
+
+
+app.delete('/favoritos', autenticarToken, async (req, res) => {
+  const usuarioId = req.usuario.id;
+  const { linkId } = req.body;
+
+  if (!linkId) {
+    return res.status(400).json({ mensagem: 'ID do link é obrigatório' });
+  }
+
+  try {
+    await prisma.favorito.deleteMany({
+      where: { usuarioId, linkId },
+    });
+
+    res.json({ mensagem: 'Descurtido com sucesso' });
+  } catch (error) {
+    console.error('Erro ao descurtir:', error);
+    res.status(500).json({ mensagem: 'Erro ao descurtir' });
+  }
+});

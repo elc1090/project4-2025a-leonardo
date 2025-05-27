@@ -36,7 +36,9 @@ function Adicionar() {
 
   return (
     <div className="container">
+      <a href="/">
       <img src={img1} alt="logo" className="logo" />
+      </a>
       <form
         className="form"
         onSubmit={(e) => {
@@ -84,7 +86,7 @@ function Adicionar() {
           onChange={(e) => setGenero(e.target.value)}
           required
         >
-          {/* gêneros mantidos aqui */}
+          {}
           <option value="house">House</option>
           <option value="techno">Techno</option>
           <option value="trance">Trance</option>

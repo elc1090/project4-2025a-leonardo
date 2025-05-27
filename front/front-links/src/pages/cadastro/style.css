@@ -5,13 +5,13 @@
   text-align: center;
 }
 
-/* Centraliza o conteúdo na tela */
+
 .container {
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #262626; /* gray-100 */
+  background-color: #262626; 
   flex-direction: column;
   margin-top: -7%;
 }
@@ -58,7 +58,7 @@
 }
 
 
-/* Estilo do formulário */
+
 .form {
   background-color: #282828;
   margin-top: -5%;
@@ -70,21 +70,21 @@
   margin-bottom: 5%;
 }
 
-/* Título do formulário */
+
 .title {
   font-size: 1.5rem;
   font-weight: bold;
-  color: #ffffff; /* gray-800 */
+  color: #ffffff; 
   text-align: center;
   margin-bottom: 1.5rem;
 }
 
-/* Campos de input */
+
 .input {
   width: 100%;
   padding: 0.75rem;
   margin-bottom: 1rem;
-  border: 1px solid #4d4d4d; /* gray-300 */
+  border: 1px solid #4d4d4d; 
   border-radius: 0.5rem;
   font-size: 1rem;
   outline: none;
@@ -93,15 +93,14 @@
 }
 
 .input:focus {
-  border-color: #3b82f6; /* blue-500 */
+  border-color: #3b82f6; 
   box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
 }
 
-/* Botão de envio */
 .button {
   width: 100%;
   padding: 0.75rem;
-  background-color: #eb2525; /* blue-600 */
+  background-color: #eb2525; 
   color: #363636;
   border: none;
   border-radius: 0.5rem;
@@ -112,5 +111,14 @@
 }
 
 .button:hover {
-  background-color: rgb(121, 21, 21); /* blue-700 */
+  background-color: rgb(121, 21, 21); 
+}
+
+.conta {
+  margin-top: -4%;
+  color: white;
+}
+
+.logar {
+  color: white;
 }

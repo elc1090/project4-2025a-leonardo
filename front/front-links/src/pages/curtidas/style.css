@@ -210,19 +210,3 @@ body {
   background-color: #ff3b3b;
 }
 
-.coracao_cheio {
-  width: 30px;
-  height: 30px;
-  background-color: #1e1e1e;
-}
-
-.like-button{
-  background-color: #1e1e1e;
-  border: none;
-}
-
-.coracao_vazio {
-  width: 30px;
-  height: 30px;
-  background-color: #1e1e1e;
-}

@@ -3,6 +3,7 @@ import Login from './pages/login'
 import Home from './pages/home'
 import Cadastro from './pages/cadastro' 
 import Adicionar from './pages/adicionar'
+import Curtidas from './pages/curtidas'
 import { useEffect, useState } from 'react'
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
         <Route path="/" element={logado ? <Home setLogado={setLogado} /> : <Navigate to="/login" />} />
         <Route path="/cadastro" element={<Cadastro />} />
         <Route path="/adicionar" element={<Adicionar />} />
+        <Route path="/curtidas" element={<Curtidas />} />
       </Routes>
     </Router>
   )

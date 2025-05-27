@@ -27,7 +27,9 @@ function Cadastro() {
 
   return (
     <div className="container">
+      <a href="/">
       <img src={img1} alt="logo" className="logo" />
+      </a>
       <form
         className="form"
         onSubmit={(e) => {
@@ -68,6 +70,9 @@ function Cadastro() {
 
         {erro && <p style={{ color: 'red', marginTop: '10px' }}>{erro}</p>}
       </form>
+      <div className="conta">
+      Já possui uma conta?
+      <a href="/login" className='logar'> Entrar</a></div>
     </div>
   );
 }

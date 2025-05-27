@@ -50,6 +50,9 @@ function Login({ setLogado }) {
 
         {erro && <p style={{ color: 'red', marginTop: '10px' }}>{erro}</p>}
       </form>
+      <div className="conta">
+      Não possui uma conta?
+      <a href="/cadastro" className='logar'> Cadastrar-se</a></div>
     </div>
   )
 }
