@@ -1,14 +1,12 @@
 ![image](https://github.com/user-attachments/assets/6769d35e-acb6-484c-a67f-2682c497efd8)
 
----
 
 ### Desenvolvedor
 
 * Leonardo Garcia Balk — Sistemas de Informação
 
----
 
-### Nosso produto
+### O projeto
 
 O projeto é uma plataforma web para **compartilhamento e organização de links de streaming de música eletrônica**. Usuários autenticados podem:
 
