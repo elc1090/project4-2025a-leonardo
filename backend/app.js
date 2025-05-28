@@ -12,6 +12,7 @@ app.use(express.json())
 const cors = require('cors')
   app.use(cors())
 
+  const port = process.env.PORT || 3001;
 
 //  proteger rotas
 function autenticarToken(req, res, next) {
