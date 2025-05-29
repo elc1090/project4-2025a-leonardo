@@ -4,9 +4,9 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
-function Curtidas({ setLogado }) {
+function MeusPosts({ setLogado }) {
   const navigate = useNavigate();
-  const [linksCurtidos, setLinksCurtidos] = useState([]);
+  const [meusLinks, setMeusLinks] = useState([]);
 
   function getUserIdFromToken() {
     const token = localStorage.getItem('token');
@@ -36,36 +36,27 @@ function Curtidas({ setLogado }) {
         return null;
       }
     }
-  
-    async function carregarLinksCurtidos() {
-      try {
-        const token = localStorage.getItem('token');
-        const resposta = await axios.get('https://keepdance-backend.onrender.com/links', {
-          params: { usuarioId: userId },
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
-  
-        const curtidos = resposta.data.filter(link => link.curtido);
-  
 
-        const curtidosComPreview = await Promise.all(
-          curtidos.map(async (link) => {
+    async function carregarMeusLinks() {
+      try {
+        const resposta = await axios.get('https://keepdance-backend.onrender.com/links');
+        const meus = resposta.data.filter(link => link.usuarioId === userId);
+
+        const linksComPreview = await Promise.all(
+          meus.map(async (link) => {
             const imagem = await gerarPreview(link.url);
             return { ...link, imagem };
           })
         );
-  
-        setLinksCurtidos(curtidosComPreview);
+
+        setMeusLinks(linksComPreview);
       } catch (error) {
-        console.error('Erro ao buscar links curtidos:', error);
+        console.error('Erro ao carregar meus links:', error);
       }
     }
-  
-    if (userId) carregarLinksCurtidos();
+
+    if (userId) carregarMeusLinks();
   }, [userId]);
-  
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -73,33 +64,43 @@ function Curtidas({ setLogado }) {
     navigate('/login');
   };
 
+  const handleExcluir = async (linkId) => {
+    try {
+      const token = localStorage.getItem('token');
+      await axios.delete(`https://keepdance-backend.onrender.com/links/${linkId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setMeusLinks(prev => prev.filter(link => link.id !== linkId));
+    } catch (error) {
+      console.error('Erro ao excluir link:', error);
+    }
+  };
+
   return (
     <div className="home">
       <header className="header">
         <div className="navbar-left">
           <a href="/">
-          <img src={logohome} alt="Logo" className="logohome" />
+            <img src={logohome} alt="Logo" className="logohome" />
           </a>
         </div>
 
         <div className="navbar-center">
-          <h2>Links Curtidos</h2>
+          <h2>Meus Posts</h2>
         </div>
 
         <div className="navbar-right">
-          <button onClick={() => navigate('/')} className="green-button">
-            Página Inicial
-          </button>
+          <button onClick={() => navigate('/')} className="green-button">Página Inicial</button>
           <button onClick={handleLogout} className="exit-button">Sair</button>
         </div>
       </header>
 
       <main className="main-content">
         <div className="main-box">
-          {linksCurtidos.length === 0 ? (
-            <p>Você ainda não curtiu nenhum streaming.</p>
+          {meusLinks.length === 0 ? (
+            <p>Você ainda não adicionou nenhum link.</p>
           ) : (
-            linksCurtidos.map(link => (
+            meusLinks.map(link => (
               <div key={link.id} className="card-link">
                 {link.imagem && (
                   <img src={link.imagem} alt={link.titulo} className="card-image" />
@@ -108,6 +109,11 @@ function Curtidas({ setLogado }) {
                 <p><strong>Gênero:</strong> {link.genero}</p>
                 <p><strong>Tipo:</strong> {link.tipo}</p>
                 <a href={link.url} target="_blank" rel="noopener noreferrer">Ouvir agora</a>
+                <div className="botoes-post">
+                  <button className="edit-button" onClick={() => navigate(`/editar/${link.id}`)}>Editar</button>
+                  <button className="red-button" onClick={() => handleExcluir(link.id)}>Excluir</button>
+              </div>
+
               </div>
             ))
           )}
@@ -117,4 +123,4 @@ function Curtidas({ setLogado }) {
   );
 }
 
-export default Curtidas;
+export default MeusPosts;

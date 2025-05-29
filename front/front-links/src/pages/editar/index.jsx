@@ -1,11 +1,12 @@
 import './style.css';
 import img1 from '../../assets/1.png';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
-function Adicionar() {
+function EditarPost() {
   const navigate = useNavigate();
+  const { id } = useParams();
 
   const [titulo, setTitulo] = useState('');
   const [link, setLink] = useState('');
@@ -14,39 +15,66 @@ function Adicionar() {
   const [publico, setPublico] = useState(true);
   const [erro, setErro] = useState('');
 
-  const handleAdicionar = async () => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      setErro('Você precisa estar logado para adicionar.');
-      return;
+  useEffect(() => {
+    async function carregarLink() {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          setErro('Você precisa estar logado.');
+          return;
+        }
+        const resposta = await axios.get(`https://keepdance-backend.onrender.com/links/${id}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+
+        const dados = resposta.data;
+        setTitulo(dados.titulo);
+        setLink(dados.url);
+        setTipo(dados.tipo);
+        setGenero(dados.genero);
+        setPublico(dados.publico);
+      } catch (error) {
+        console.error('Erro ao carregar o link:', error);
+        setErro('Não foi possível carregar os dados do link.');
+      }
     }
 
+    carregarLink();
+  }, [id]);
+
+  const handleEditar = async () => {
     try {
-      await axios.post(
-        'https://keepdance-backend.onrender.com/links',
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setErro('Você precisa estar logado para editar.');
+        return;
+      }
+
+      await axios.put(
+        `https://keepdance-backend.onrender.com/links/${id}`,
         { titulo, url: link, tipo, genero, publico },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      navigate('/');
+      navigate('/meus-posts'); 
     } catch (error) {
       console.error(error.response?.data || error.message);
-      setErro('Erro ao adicionar. Verifique os dados e tente novamente.');
+      setErro('Erro ao editar. Verifique os dados e tente novamente.');
     }
   };
 
   return (
     <div className="container">
       <a href="/">
-      <img src={img1} alt="logo" className="logo" />
+        <img src={img1} alt="logo" className="logo" />
       </a>
       <form
         className="form"
         onSubmit={(e) => {
           e.preventDefault();
-          handleAdicionar();
+          handleEditar();
         }}
       >
-        <h1 className="title">Adicionar</h1>
+        <h1 className="title">Editar Link</h1>
 
         <input
           name="titulo"
@@ -86,7 +114,6 @@ function Adicionar() {
           onChange={(e) => setGenero(e.target.value)}
           required
         >
-          {}
           <option value="house">House</option>
           <option value="techno">Techno</option>
           <option value="trance">Trance</option>
@@ -125,7 +152,7 @@ function Adicionar() {
         </label>
 
         <button type="submit" className="button">
-          Adicionar
+          Salvar Alterações
         </button>
 
         {erro && <p style={{ color: 'red', marginTop: '10px' }}>{erro}</p>}
@@ -134,4 +161,4 @@ function Adicionar() {
   );
 }
 
-export default Adicionar;
+export default EditarPost;

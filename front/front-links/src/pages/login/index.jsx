@@ -12,7 +12,7 @@ function Login({ setLogado }) {
 
   const handleLogin = async () => {
     try {
-      const res = await axios.post('http://localhost:3000/login', { email, senha })
+      const res = await axios.post('https://keepdance-backend.onrender.com/login', { email, senha })
       localStorage.setItem('token', res.data.token)
       setLogado(true) 
       navigate('/')

@@ -13,7 +13,7 @@ function Cadastro() {
 
   const handleCadastro = async () => {
     try {
-      await axios.post('http://localhost:3000/usuarios', {
+      await axios.post('https://keepdance-backend.onrender.com/usuarios', {
         nomeUsuario: nome,
         email,
         senha,

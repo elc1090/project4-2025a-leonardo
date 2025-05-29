@@ -2,6 +2,7 @@ const express = require('express')
 const { PrismaClient } = require('@prisma/client')
 const jwt = require('jsonwebtoken')
 const SECRET = 'chave'
+require('dotenv').config();
 
 
 const app = express()
@@ -12,7 +13,9 @@ app.use(express.json())
 const cors = require('cors')
   app.use(cors())
 
-  const port = process.env.PORT || 3001;
+app.listen(3000, () => {
+  console.log('Servidor rodando na porta 3000');
+});
 
 //  proteger rotas
 function autenticarToken(req, res, next) {
@@ -27,6 +30,8 @@ function autenticarToken(req, res, next) {
     next()
   })
 }
+
+
 
 // Rota para cadastrar usuário
 app.post('/usuarios', async (req, res) => {
@@ -116,9 +121,13 @@ app.get('/links', async (req, res) => {
     const links = await prisma.link.findMany({
       where: { publico: true },
       include: {
-        usuario: true,
+        usuario: {
+          select: {
+            nomeUsuario: true
+          }
+        },
         favoritos: {
-          where: { usuarioId: usuarioId } // sem Number()
+          where: { usuarioId: usuarioId }
         }
       }
     });
@@ -137,13 +146,6 @@ app.get('/links', async (req, res) => {
     res.status(500).json({ erro: error.message });
   }
 });
-
-
-
-
-app.listen(3000, () => {
-  console.log('Servidor rodando na porta 3000')
-})
 
 const handleLogout = () => {
   localStorage.removeItem('token'); // Remove o token
@@ -197,5 +199,102 @@ app.delete('/favoritos', autenticarToken, async (req, res) => {
   } catch (error) {
     console.error('Erro ao descurtir:', error);
     res.status(500).json({ mensagem: 'Erro ao descurtir' });
+  }
+});
+
+app.delete('/links/:id', autenticarToken, async (req, res) => {
+  const { id } = req.params;
+
+  const isValidObjectId = (id) => /^[a-f\d]{24}$/i.test(id);
+
+  if (!isValidObjectId(id)) {
+    return res.status(400).json({ mensagem: 'ID inválido' });
+  }
+
+  try {
+    const link = await prisma.link.findUnique({ where: { id } });
+
+    if (!link) {
+      return res.status(404).json({ mensagem: 'Link não encontrado' });
+    }
+
+    if (link.usuarioId !== req.usuario.id) {
+      return res.status(403).json({ mensagem: 'Você não tem permissão para excluir este link' });
+    }
+
+    // exclui favoritos relacionados primeiro
+    await prisma.favorito.deleteMany({
+      where: { linkId: id },
+    });
+
+
+    await prisma.link.delete({
+      where: { id },
+    });
+
+    res.json({ mensagem: 'Link excluído com sucesso' });
+  } catch (error) {
+    console.error('Erro ao excluir link:', error);
+    res.status(500).json({ mensagem: 'Erro interno ao excluir link' });
+  }
+});
+
+
+app.put('/links/:id', autenticarToken, async (req, res) => {
+  const linkId = req.params.id; 
+  const usuarioId = req.usuario.id;
+  const { url, titulo, tipo, genero, publico } = req.body;
+
+  const isValidId = /^[0-9a-fA-F]{24}$/.test(linkId);
+  if (!isValidId) {
+    return res.status(400).json({ erro: 'ID inválido' });
+  }
+
+  try {
+    const link = await prisma.link.findUnique({
+      where: { id: linkId }
+    });
+
+    if (!link) {
+      return res.status(404).json({ erro: 'Link não encontrado' });
+    }
+
+    if (link.usuarioId !== usuarioId) {
+      return res.status(403).json({ erro: 'Você não tem permissão para editar este link' });
+    }
+
+    const linkAtualizado = await prisma.link.update({
+      where: { id: linkId },
+      data: { url, titulo, tipo, genero, publico }
+    });
+
+    res.json(linkAtualizado);
+  } catch (error) {
+    console.error('Erro ao editar link:', error);
+    res.status(500).json({ erro: error.message });
+  }
+});
+
+app.get('/links/:id', autenticarToken, async (req, res) => {
+  const linkId = req.params.id;
+
+  const isValidId = /^[0-9a-fA-F]{24}$/.test(linkId);
+  if (!isValidId) {
+    return res.status(400).json({ erro: 'ID inválido' });
+  }
+
+  try {
+    const link = await prisma.link.findUnique({
+      where: { id: linkId }
+    });
+
+    if (!link) {
+      return res.status(404).json({ erro: 'Link não encontrado' });
+    }
+
+    res.json(link);
+  } catch (error) {
+    console.error('Erro ao buscar link:', error);
+    res.status(500).json({ erro: 'Erro interno ao buscar link' });
   }
 });
