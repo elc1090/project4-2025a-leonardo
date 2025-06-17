@@ -7,6 +7,7 @@ import axios from 'axios';
 function MeusPosts({ setLogado }) {
   const navigate = useNavigate();
   const [meusLinks, setMeusLinks] = useState([]);
+  const [loading, setLoading] = useState(true); // ← NOVO
 
   function getUserIdFromToken() {
     const token = localStorage.getItem('token');
@@ -38,6 +39,7 @@ function MeusPosts({ setLogado }) {
     }
 
     async function carregarMeusLinks() {
+      setLoading(true); // ← INÍCIO do loading
       try {
         const resposta = await axios.get('https://keepdance-backend.onrender.com/links');
         const meus = resposta.data.filter(link => link.usuarioId === userId);
@@ -52,6 +54,8 @@ function MeusPosts({ setLogado }) {
         setMeusLinks(linksComPreview);
       } catch (error) {
         console.error('Erro ao carregar meus links:', error);
+      } finally {
+        setLoading(false); // ← FIM do loading
       }
     }
 
@@ -97,7 +101,12 @@ function MeusPosts({ setLogado }) {
 
       <main className="main-content">
         <div className="main-box">
-          {meusLinks.length === 0 ? (
+          {loading ? ( // ← Exibe o loading
+            <div className="centralizar">
+              Carregando...
+              <div className="loading-spinner"></div>
+            </div>
+          ) : meusLinks.length === 0 ? (
             <p>Você ainda não adicionou nenhum link.</p>
           ) : (
             meusLinks.map(link => (
@@ -112,8 +121,7 @@ function MeusPosts({ setLogado }) {
                 <div className="botoes-post">
                   <button className="edit-button" onClick={() => navigate(`/editar/${link.id}`)}>Editar</button>
                   <button className="red-button" onClick={() => handleExcluir(link.id)}>Excluir</button>
-              </div>
-
+                </div>
               </div>
             ))
           )}

@@ -7,6 +7,7 @@ import axios from 'axios';
 function Curtidas({ setLogado }) {
   const navigate = useNavigate();
   const [linksCurtidos, setLinksCurtidos] = useState([]);
+  const [loading, setLoading] = useState(true); // ← NOVO estado
 
   function getUserIdFromToken() {
     const token = localStorage.getItem('token');
@@ -36,8 +37,9 @@ function Curtidas({ setLogado }) {
         return null;
       }
     }
-  
+
     async function carregarLinksCurtidos() {
+      setLoading(true); // ← INÍCIO do loading
       try {
         const token = localStorage.getItem('token');
         const resposta = await axios.get('https://keepdance-backend.onrender.com/links', {
@@ -46,9 +48,8 @@ function Curtidas({ setLogado }) {
             Authorization: `Bearer ${token}`
           }
         });
-  
+
         const curtidos = resposta.data.filter(link => link.curtido);
-  
 
         const curtidosComPreview = await Promise.all(
           curtidos.map(async (link) => {
@@ -56,16 +57,17 @@ function Curtidas({ setLogado }) {
             return { ...link, imagem };
           })
         );
-  
+
         setLinksCurtidos(curtidosComPreview);
       } catch (error) {
         console.error('Erro ao buscar links curtidos:', error);
+      } finally {
+        setLoading(false); // ← FIM do loading
       }
     }
-  
+
     if (userId) carregarLinksCurtidos();
   }, [userId]);
-  
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -78,7 +80,7 @@ function Curtidas({ setLogado }) {
       <header className="header">
         <div className="navbar-left">
           <a href="/">
-          <img src={logohome} alt="Logo" className="logohome" />
+            <img src={logohome} alt="Logo" className="logohome" />
           </a>
         </div>
 
@@ -96,7 +98,12 @@ function Curtidas({ setLogado }) {
 
       <main className="main-content">
         <div className="main-box">
-          {linksCurtidos.length === 0 ? (
+          {loading ? ( // ← LOADING visível
+            <div className="centralizar">
+              Carregando...
+              <div className="loading-spinner"></div>
+            </div>
+          ) : linksCurtidos.length === 0 ? (
             <p>Você ainda não curtiu nenhum streaming.</p>
           ) : (
             linksCurtidos.map(link => (
