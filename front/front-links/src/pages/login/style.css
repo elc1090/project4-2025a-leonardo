@@ -117,3 +117,34 @@
 .logar {
   color: white;
 }
+
+
+/* Estilo para o botão Google */
+.button.google-login {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #fff;
+  color: #444;
+  border: 1px solid #888;
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 1rem;
+  padding: 10px 12px;
+  margin-top: 10px;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 4px rgba(60,60,60,0.05);
+}
+
+.button.google-login:hover {
+  background: #f5f5f5;
+  box-shadow: 0 4px 12px rgba(60,60,60,0.08);
+}
+
+.button.google-login img {
+  width: 20px;
+  height: 20px;
+  margin-right: 4px;
+}

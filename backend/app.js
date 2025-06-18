@@ -2,6 +2,9 @@ const express = require('express')
 const { PrismaClient } = require('@prisma/client')
 const jwt = require('jsonwebtoken')
 const SECRET = 'chave'
+const passport = require('passport');
+require('./googleAuth');
+const session = require('express-session');
 require('dotenv').config();
 
 
@@ -12,6 +15,14 @@ const prisma = new PrismaClient()
 app.use(express.json())
 const cors = require('cors')
   app.use(cors())
+
+  app.use(session({
+  secret: SECRET,
+  resave: false,
+  saveUninitialized: false
+}));
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.listen(3000, () => {
   console.log('Servidor rodando na porta 3000');
@@ -74,6 +85,23 @@ app.post('/login', async (req, res) => {
   }
 })
 
+app.get('/auth/google',
+  passport.authenticate('google', { scope: ['profile', 'email'] })
+);
+
+app.get('/auth/google/callback',
+  passport.authenticate('google', { session: false, failureRedirect: '/login' }),
+  (req, res) => {
+    const jwt = require('jsonwebtoken');
+    const token = jwt.sign(
+      { id: req.user.id, nomeUsuario: req.user.nomeUsuario },
+      SECRET,
+      { expiresIn: '1h' }
+    );
+    // Redireciona para o frontend passando o token na URL
+    res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:5173'}/login?token=${token}`);
+  }
+);
 
 // Criar link 
 app.post('/links', autenticarToken, async (req, res) => {
