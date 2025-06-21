@@ -7,6 +7,7 @@ import Adicionar from './pages/adicionar';
 import Curtidas from './pages/curtidas';
 import MeusPosts from './pages/posts';
 import EditarPost from './pages/editar';
+import Sugestoes from './pages/sugestoes';
 
 function App() {
   const [logado, setLogado] = useState(null); // null = ainda checando
@@ -31,6 +32,7 @@ function App() {
         <Route path="/curtidas" element={logado ? <Curtidas setLogado={setLogado} /> : <Navigate to="/login" />} />
         <Route path="/meus-posts" element={logado ? <MeusPosts setLogado={setLogado} /> : <Navigate to="/login" />} />
         <Route path="/editar/:id" element={<EditarPost />} />
+        <Route path="/sugestoes" element={logado ? <Sugestoes setLogado={setLogado} /> : <Navigate to="/login" />} />
       </Routes>
     </Router>
   );

@@ -7,9 +7,9 @@ require('./googleAuth');
 const session = require('express-session');
 require('dotenv').config();
 
-
 const app = express()
 const prisma = new PrismaClient()
+const { GoogleGenerativeAI } = require('@google/generative-ai');
 
 
 app.use(express.json())
@@ -229,6 +229,52 @@ app.delete('/favoritos', autenticarToken, async (req, res) => {
     res.status(500).json({ mensagem: 'Erro ao descurtir' });
   }
 });
+
+// ROTA PARA O CHATBOT DE RECOMENDAÇÃO
+app.post('/chat', async (req, res) => {
+  const { mensagem } = req.body;
+
+  if (!mensagem) {
+    return res.status(400).json({ erro: 'A mensagem é obrigatória.' });
+  }
+
+  try {
+    // Sem buscar links curtidos do usuário (não tem user id)
+    const generosFavoritos = 'Nenhum ainda';
+
+    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+
+    const prompt = `
+      Você é o "KeepDancer", um DJ e especialista em música eletrônica para o app KeepDance.
+      Um usuário está pedindo uma recomendação.
+
+      Contexto do usuário:
+      - Gêneros que ele já curtiu: ${generosFavoritos}
+
+      Pedido do usuário: "${mensagem}"
+
+      Sua tarefa:
+      1. Responda de forma amigável e como um DJ.
+      2. Recomende de 2 a 4 músicas ou sets.
+      3. **IMPORTANTE**: Liste cada recomendação em uma nova linha, usando EXATAMENTE o formato: "Nome da Música" - Nome do Artista
+      Exemplo de formato de saída:
+      "Strobe" - deadmau5
+      "Opus" - Eric Prydz
+    `;
+
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    const text = response.text();
+
+    res.json({ recomendacoes: text });
+
+  } catch (error) {
+    console.error("Erro ao comunicar com a IA:", error);
+    res.status(500).json({ erro: 'Ocorreu um erro ao processar sua solicitação.' });
+  }
+});
+
 
 app.delete('/links/:id', autenticarToken, async (req, res) => {
   const { id } = req.params;

@@ -136,6 +136,7 @@ function Home({ setLogado }) {
             <a href="#">Página inicial</a>
             <a href="/curtidas">Curtidas</a>
             <a href="/meus-posts">Meus streamings</a>
+            <a href="/sugestoes">Sugestões com IA</a>
           </nav>
         </aside>
 
