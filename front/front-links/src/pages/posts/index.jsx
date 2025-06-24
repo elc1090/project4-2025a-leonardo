@@ -4,10 +4,10 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
-function MeusPosts({ setLogado }) {
+export default function MeusPosts({ setLogado }) {
   const navigate = useNavigate();
   const [meusLinks, setMeusLinks] = useState([]);
-  const [loading, setLoading] = useState(true); // ← NOVO
+  const [loading, setLoading] = useState(true);
 
   function getUserIdFromToken() {
     const token = localStorage.getItem('token');
@@ -39,7 +39,7 @@ function MeusPosts({ setLogado }) {
     }
 
     async function carregarMeusLinks() {
-      setLoading(true); // ← INÍCIO do loading
+      setLoading(true);
       try {
         const resposta = await axios.get('https://keepdance-backend.onrender.com/links');
         const meus = resposta.data.filter(link => link.usuarioId === userId);
@@ -55,7 +55,7 @@ function MeusPosts({ setLogado }) {
       } catch (error) {
         console.error('Erro ao carregar meus links:', error);
       } finally {
-        setLoading(false); // ← FIM do loading
+        setLoading(false);
       }
     }
 
@@ -82,11 +82,10 @@ function MeusPosts({ setLogado }) {
 
   return (
     <div className="home">
+      {/* NAVBAR PADRÃO */}
       <header className="header">
         <div className="navbar-left">
-          <a href="/">
-            <img src={logohome} alt="Logo" className="logohome" />
-          </a>
+          <img src={logohome} alt="Logo" className="logohome" />
         </div>
 
         <div className="navbar-center">
@@ -94,41 +93,56 @@ function MeusPosts({ setLogado }) {
         </div>
 
         <div className="navbar-right">
-          <button onClick={() => navigate('/')} className="green-button">Página Inicial</button>
+          <button className='green-button' onClick={() => navigate('/adicionar')}>
+            Adicionar streaming
+          </button>
           <button onClick={handleLogout} className="exit-button">Sair</button>
         </div>
       </header>
 
-      <main className="main-content">
-        <div className="main-box">
-          {loading ? ( // ← Exibe o loading
-            <div className="centralizar">
-              Carregando...
-              <div className="loading-spinner"></div>
-            </div>
-          ) : meusLinks.length === 0 ? (
-            <p>Você ainda não adicionou nenhum link.</p>
-          ) : (
-            meusLinks.map(link => (
-              <div key={link.id} className="card-link">
-                {link.imagem && (
-                  <img src={link.imagem} alt={link.titulo} className="card-image" />
-                )}
-                <h3>{link.titulo}</h3>
-                <p><strong>Gênero:</strong> {link.genero}</p>
-                <p><strong>Tipo:</strong> {link.tipo}</p>
-                <a href={link.url} target="_blank" rel="noopener noreferrer">Ouvir agora</a>
-                <div className="botoes-post">
-                  <button className="edit-button" onClick={() => navigate(`/editar/${link.id}`)}>Editar</button>
-                  <button className="red-button" onClick={() => handleExcluir(link.id)}>Excluir</button>
-                </div>
+      <div className="content">
+        {/* SIDEBAR PADRÃO */}
+        <aside className="sidebar">
+          <nav>
+            <a href="/">Página inicial</a>
+            <a href="/curtidas">Curtidas</a>
+            <a href="/meus-posts">Meus streamings</a>
+            <a href="/sugestoes">Sugestões com IA</a>
+          </nav>
+        </aside>
+
+        {/* CONTEÚDO PRINCIPAL */}
+        <main className="main-content">
+          <div className="main-box">
+            {loading ? (
+              <div className="centralizar">
+                Carregando...
+                <div className="loading-spinner"></div>
               </div>
-            ))
-          )}
-        </div>
-      </main>
+            ) : meusLinks.length === 0 ? (
+              <p>Você ainda não adicionou nenhum link.</p>
+            ) : (
+              meusLinks.map(link => (
+                <div key={link.id} className="card-link">
+                  {link.imagem && (
+                    <img src={link.imagem} alt={link.titulo} className="card-image" />
+                  )}
+                  <h3>{link.titulo}</h3>
+                  <p><strong>Gênero:</strong> {link.genero}</p>
+                  <p><strong>Tipo:</strong> {link.tipo}</p>
+                  <a href={link.url} target="_blank" rel="noopener noreferrer" className="green-button">
+                    Ouvir agora
+                  </a>
+                  <div className="botoes-post">
+                    <button className="edit-button" onClick={() => navigate(`/editar/${link.id}`)}>Editar</button>
+                    <button className="red-button" onClick={() => handleExcluir(link.id)}>Excluir</button>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </main>
+      </div>
     </div>
   );
 }
-
-export default MeusPosts;
