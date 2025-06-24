@@ -15,7 +15,7 @@ enum TipoLink {
 
 model Usuario {
   id          String       @id @map("_id") @default(auto()) @db.ObjectId
-  nomeUsuario String       @unique
+  nomeUsuario String
   email       String       @unique
   senha       String?      // Agora aceita null (opcional)
   criadoEm    DateTime     @default(now())

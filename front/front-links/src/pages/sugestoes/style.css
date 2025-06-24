@@ -2,18 +2,13 @@
   max-width: 1000px;
   margin: 40px auto;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #262626;
-  border-radius: 12px;
+  background-color: #1e1e1e;
+  border-radius: 16px;
   display: flex;
   flex-direction: column;
   height: 80vh;
-  padding: 16px;
-}
-
-.chat-title {
-  text-align: center;
-  color: #333;
-  margin-bottom: 20px;
+  padding: 24px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
 }
 
 .chat-messages {
@@ -22,7 +17,8 @@
   padding: 0 12px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
+  scrollbar-width: thin;
 }
 
 .message-user {
@@ -30,22 +26,23 @@
   background-color: #eb2525;
   color: white;
   border-radius: 16px 16px 0 16px;
-  padding: 10px 14px;
+  padding: 12px 18px;
   max-width: 75%;
   white-space: pre-wrap;
   font-size: 16px;
-  box-shadow: 0 1px 3px rgba(235, 37, 37, 0.3);
+  box-shadow: 0 2px 6px rgba(235, 37, 37, 0.4);
 }
 
 .message-ai {
   align-self: flex-start;
-  background-color: #333;
+  background-color: #2d2d2d;
   color: #ffffff;
   border-radius: 16px 16px 16px 0;
-  padding: 10px 14px;
+  padding: 12px 18px;
   max-width: 75%;
   font-size: 16px;
   white-space: pre-wrap;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
 
 .message-ai.loading {
@@ -54,34 +51,96 @@
 }
 
 .recommendation-list {
-  padding-left: 20px;
+  list-style: none;
+  padding: 0;
   margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .recommendation-list li {
-  margin-bottom: 6px;
+  background-color: #292929;
+  border-radius: 16px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  transition: background-color 0.3s;
 }
 
-.recommendation-list li a {
-  color: #eb2525;
+.recommendation-list li:hover {
+  background-color: #333;
+}
+
+.recommendation-list img {
+  width: 100%;
+  max-width: 100%;
+  border-radius: 12px;
+  object-fit: cover;
+  transition: transform 0.3s;
+}
+
+.recommendation-list img:hover {
+  transform: scale(1.02);
+}
+
+.recommendation-list p {
+  font-size: 17px;
+  color: #f0f0f0;
+  margin: 0;
+  font-weight: 500;
+}
+
+.recommendation-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.recommendation-actions a,
+.recommendation-actions button {
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-weight: bold;
   text-decoration: none;
-  margin-left: 8px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: transform 0.2s, opacity 0.2s;
+}
+
+.recommendation-actions a {
+  background-color: #34d399;
+  color: #0f172a;
+}
+
+.recommendation-actions button {
+  background-color: #eb2525;
+  color: white;
+  border: none;
+}
+
+.recommendation-actions a:hover,
+.recommendation-actions button:hover {
+  transform: scale(1.05);
+  opacity: 0.95;
 }
 
 .input-area {
   position: fixed;
   bottom: 0;
-  left: 20%;
+  left: 20%;               
   right: 0;
   margin: 0 auto;
   width: 100%;
-  max-width: 1000px; /* controla a largura total */
-  padding: 12px 16px;
-  background-color: #262626;
+  max-width: 1000px;
+  padding: 16px 20px;
+  background-color: #1e1e1e;
   display: flex;
-  gap: 8px;
+  gap: 10px;
   z-index: 10;
   box-sizing: border-box;
+  border-top: 1px solid #444;
 }
 
 
@@ -89,17 +148,23 @@
   flex-grow: 1;
   resize: none;
   border-radius: 12px;
-  border: 1px solid #cccccc07;
-  padding: 12px;
+  border: 1px solid #444;
+  padding: 14px;
   font-size: 16px;
   font-family: inherit;
   outline: none;
-  background-color: #333;
+  background-color: #2a2a2a;
   color: white;
+  transition: border-color 0.2s;
+}
+
+.textarea-input:focus {
+  border-color: #eb2525;
 }
 
 .textarea-input:disabled {
-  background-color: #333;
+  background-color: #2a2a2a;
+  opacity: 0.7;
 }
 
 .button-send {
@@ -107,21 +172,25 @@
   color: white;
   border: none;
   border-radius: 12px;
-  padding: 0 20px;
+  padding: 0 24px;
   cursor: pointer;
   font-weight: bold;
   font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+.button-send:hover {
+  background-color: #d32121;
 }
 
 .button-send:disabled {
   cursor: not-allowed;
-  background-color: #94a3b8;
+  background-color: #6b7280;
 }
 
 .main-content {
-  flex: 1 1 auto; 
-  max-width: 2000px; /* aumenta a largura máxima do conteúdo principal */
-  margin: 0 auto; /* centraliza */
+  flex: 1 1 auto;
+  max-width: 2000px;
+  margin: 0 auto;
   padding: 20px;
 }
-

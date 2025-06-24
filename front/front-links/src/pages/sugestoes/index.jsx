@@ -1,57 +1,97 @@
 import { useState } from "react";
 import axios from "axios";
-import logohome from '../../assets/logo.png'; // ajuste o caminho se necessário
+import logohome from '../../assets/logo.png';
 import { useNavigate } from 'react-router-dom';
 import './style.css';
 
 export default function ChatIA() {
   const navigate = useNavigate();
-
   const [mensagem, setMensagem] = useState("");
-  const [resposta, setResposta] = useState("");
+  const [recomendacoes, setRecomendacoes] = useState([]);
   const [carregando, setCarregando] = useState(false);
   const [busca, setBusca] = useState("");
-
-  const gerarLinksYoutube = (texto) => {
-    const linhas = texto.split("\n").filter((linha) => linha.trim() !== "");
-    return linhas.map((linha, index) => {
-      const match = linha.match(/"(.+)"\s*-\s*(.+)/);
-      if (match) {
-        const nome = match[1];
-        const artista = match[2];
-        const busca = encodeURIComponent(`${nome} ${artista}`);
-        const linkYoutube = `https://www.youtube.com/results?search_query=${busca}`;
-
-        return (
-          <li key={index}>
-            <strong>{nome}</strong> - {artista}{" "}
-            <a href={linkYoutube} target="_blank" rel="noopener noreferrer">
-              🔗 YouTube
-            </a>
-          </li>
-        );
-      } else {
-        return <li key={index}>{linha}</li>;
-      }
-    });
-  };
 
   const enviar = async () => {
     if (!mensagem.trim()) return;
     setCarregando(true);
-    setResposta("");
+    setRecomendacoes([]);
 
     try {
-      const res = await axios.post(
-        "http://localhost:3000/chat",
-        { mensagem }
+      const res = await axios.post("http://localhost:3000/chat", { mensagem });
+      const texto = res.data.recomendacoes;
+
+      const linhas = texto.split('\n').filter((linha) => linha.trim() !== "");
+      const itens = await Promise.all(
+        linhas.map(async (linha) => {
+          const match = linha.match(/"(.+?)"\s*-\s*(.+)/);
+          if (!match) return null;
+
+          const [_, titulo, artista] = match;
+          const busca = `${titulo} ${artista}`;
+          const searchRes = await axios.get(`https://www.googleapis.com/youtube/v3/search`, {
+            params: {
+              key: import.meta.env.VITE_YOUTUBE_API_KEY,
+              part: 'snippet',
+              q: busca,
+              type: 'video',
+              maxResults: 1,
+            },
+          });
+
+          const videoId = searchRes.data.items[0]?.id?.videoId;
+          const urlYoutube = videoId ? `https://www.youtube.com/watch?v=${videoId}` : null;
+
+          try {
+            const preview = await axios.get("https://api.microlink.io", {
+              params: { url: urlYoutube },
+            });
+
+            const imagem = preview.data?.data?.image?.url || null;
+
+            return {
+              titulo,
+              artista,
+              imagem,
+              url: urlYoutube,
+            };
+          } catch (e) {
+            return {
+              titulo,
+              artista,
+              imagem: null,
+              url: urlYoutube,
+            };
+          }
+        })
       );
-      setResposta(res.data.recomendacoes);
+
+      setRecomendacoes(itens.filter(Boolean));
     } catch (error) {
       console.error("Erro ao enviar para IA:", error);
-      setResposta("Erro ao gerar recomendação.");
     } finally {
       setCarregando(false);
+    }
+  };
+
+  const handleAdicionar = async (rec) => {
+    const token = localStorage.getItem('token');
+    if (!token) return alert("Você precisa estar logado.");
+
+    try {
+      await axios.post("http://localhost:3000/links", {
+        titulo: rec.titulo,
+        url: rec.url,
+        tipo: "track",
+        genero: "outro",
+        publico: true,
+      }, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      alert("Adicionado com sucesso!");
+    } catch (err) {
+      console.error(err);
+      alert("Erro ao adicionar.");
     }
   };
 
@@ -98,17 +138,28 @@ export default function ChatIA() {
         <main className="main-content">
           <div className="main-box">
             <div className="chat-container">
-  
 
               <div className="chat-messages">
                 {mensagem.trim() && <div className="message-user">{mensagem}</div>}
 
                 {carregando && <div className="message-ai loading">Carregando...</div>}
 
-                {resposta && !carregando && (
+                {recomendacoes.length > 0 && (
                   <div className="message-ai">
-                   
-                    <ul className="recommendation-list">{gerarLinksYoutube(resposta)}</ul>
+                    <ul className="recommendation-list">
+                      {recomendacoes.map((rec, index) => (
+                        <li key={index}>
+                          {rec.imagem && (
+                            <img src={rec.imagem} alt={rec.titulo} />
+                          )}
+                          <p><strong>{rec.titulo}</strong> - {rec.artista}</p>
+                          <div className="recommendation-actions">
+                            <a href={rec.url} target="_blank" rel="noopener noreferrer">Ouvir agora</a>
+                            <button onClick={() => handleAdicionar(rec)}>Adicionar</button>
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
                   </div>
                 )}
               </div>
@@ -129,15 +180,14 @@ export default function ChatIA() {
                   }}
                 />
                 <button
-                  onClick={() => {
-                    if (!carregando && mensagem.trim()) enviar();
-                  }}
+                  onClick={() => { if (!carregando && mensagem.trim()) enviar(); }}
                   disabled={carregando || !mensagem.trim()}
                   className="button-send"
                 >
                   {carregando ? "Carregando..." : "Enviar"}
                 </button>
               </div>
+
             </div>
           </div>
         </main>

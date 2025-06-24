@@ -257,7 +257,7 @@ app.post('/chat', async (req, res) => {
       Sua tarefa:
       1. Responda de forma amigável e como um DJ.
       2. Recomende de 2 a 4 músicas ou sets.
-      3. **IMPORTANTE**: Liste cada recomendação em uma nova linha, usando EXATAMENTE o formato: "Nome da Música" - Nome do Artista
+      3. **IMPORTANTE**: Liste cada recomendação em uma nova linha, usando EXATAMENTE o formato: "Nome da Música" - Nome do Artista e sem ordenador de lista. Opte sempre pelas músicas mais visualizadas.
       Exemplo de formato de saída:
       "Strobe" - deadmau5
       "Opus" - Eric Prydz
