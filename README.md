@@ -4,6 +4,11 @@
 
 * Leonardo Garcia Balk — Sistemas de Informação
 
+### Acesso
+
+* Acesso: https://keepdance.netlify.app/ 
+* Backend: https://keepdance-backend.onrender.com/
+
 ### O projeto
 
 O projeto é uma plataforma web para **compartilhamento e organização de links de streaming de música eletrônica**. Usuários autenticados podem:
