@@ -1,4 +1,4 @@
-![image](![image](https://github.com/user-attachments/assets/8c05de2a-d23f-4e3c-92a5-ae5a6bb725e8)
+(![image](https://github.com/user-attachments/assets/8c05de2a-d23f-4e3c-92a5-ae5a6bb725e8)
 
 ### Desenvolvedor
 
