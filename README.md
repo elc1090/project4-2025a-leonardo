@@ -6,8 +6,8 @@
 
 ### Acesso
 
-## Acesso: https://keepdance.netlify.app/ 
-## Backend: https://keepdance-backend.onrender.com/
+#### Acesso: https://keepdance.netlify.app/ 
+#### Backend: https://keepdance-backend.onrender.com/
 
 ### O projeto
 
