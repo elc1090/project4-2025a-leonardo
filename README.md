@@ -1,10 +1,8 @@
-![image](https://github.com/user-attachments/assets/6769d35e-acb6-484c-a67f-2682c497efd8)
-
+![image](![image](https://github.com/user-attachments/assets/8c05de2a-d23f-4e3c-92a5-ae5a6bb725e8)
 
 ### Desenvolvedor
 
 * Leonardo Garcia Balk — Sistemas de Informação
-
 
 ### O projeto
 
@@ -15,9 +13,15 @@ O projeto é uma plataforma web para **compartilhamento e organização de links
 * Curtir e descurtir links de outros usuários;
 * Pesquisar por palavras-chave;
 * Ver apenas os links curtidos;
-* Acessar diretamente o conteúdo em nova aba.
+* Acessar diretamente o conteúdo em nova aba;
+* **Cadastrar, editar e deletar seus próprios links**;
+* **Ver todos os seus links na página "Meus Posts"**;
+* **Editar e excluir links já cadastrados**;
+* **Logout rápido, removendo o token de autenticação**;
+* **Login com Google (OAuth)**, além do login tradicional;
+* **Página de sugestões com integração de IA** para recomendações musicais (ou feedback).
 
-Essa aplicação foi desenvolvida com a temática **"Compartilhamento"** pois permite que usuários contribuam com links musicais e interajam com os links de outros, criando uma rede de recomendações.
+Esta aplicação foi desenvolvida com a temática **"Compartilhamento"** pois permite que usuários contribuam com links musicais e interajam com os links de outros, criando uma rede de recomendações.
 
 ---
 
@@ -30,6 +34,10 @@ O processo de desenvolvimento envolveu:
 2. Integração com Microlink API para gerar previews de links;
 3. Frontend com React (usando React Router, Axios e gerenciamento de estado com hooks);
 4. Autenticação JWT com verificação de token;
+5. **Autenticação OAuth via Google com Passport.js**;
+6. **CRUD completo para links, incluindo edição e remoção**;
+7. **Página dedicada "Meus Posts" para gerenciamento pessoal dos links**;
+8. **Página de sugestões com IA**.
 
 ---
 
@@ -43,6 +51,7 @@ O processo de desenvolvimento envolveu:
   * Axios
   * React Router DOM
   * Vite
+
 * **Backend**:
 
   * Node.js
@@ -51,9 +60,14 @@ O processo de desenvolvimento envolveu:
   * SQLite
   * JWT
   * CORS
+  * Passport.js (Google OAuth)
+
 * **APIs externas**:
 
-  * [Microlink API](https://microlink.io/) (geração de previews de links)
+  * MicrolinkAPI
+  * YoutubeAPI
+  * Google OAuth
+  * Google Gemini API
 
 ---
 
@@ -62,11 +76,13 @@ O processo de desenvolvimento envolveu:
 * Visual Studio Code
 * Postman (testes de API)
 * GitHub (controle de versão)
+
 ---
 
 #### Referências e créditos
 
-* ChatGPT
+* Ferramentas de IA
+
 ---
 
 Projeto entregue para a disciplina de [Desenvolvimento de Software para a Web](http://github.com/andreainfufsm/elc1090-2025a) em 2025a.
