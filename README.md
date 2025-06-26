@@ -14,12 +14,12 @@ O projeto é uma plataforma web para **compartilhamento e organização de links
 * Pesquisar por palavras-chave;
 * Ver apenas os links curtidos;
 * Acessar diretamente o conteúdo em nova aba;
-* **Cadastrar, editar e deletar seus próprios links**;
-* **Ver todos os seus links na página "Meus Posts"**;
-* **Editar e excluir links já cadastrados**;
-* **Logout rápido, removendo o token de autenticação**;
-* **Login com Google (OAuth)**, além do login tradicional;
-* **Página de sugestões com integração de IA** para recomendações musicais (ou feedback).
+* *Cadastrar, editar e deletar seus próprios links**;
+* *Ver todos os seus links na página "Meus Posts"**;
+* *Editar e excluir links já cadastrados**;
+* *Logout rápido, removendo o token de autenticação**;
+* *Login com Google (OAuth)**, além do login tradicional;
+* *Página de sugestões com integração de IA** para recomendações musicais (ou feedback).
 
 Esta aplicação foi desenvolvida com a temática **"Compartilhamento"** pois permite que usuários contribuam com links musicais e interajam com os links de outros, criando uma rede de recomendações.
 
@@ -34,10 +34,10 @@ O processo de desenvolvimento envolveu:
 2. Integração com Microlink API para gerar previews de links;
 3. Frontend com React (usando React Router, Axios e gerenciamento de estado com hooks);
 4. Autenticação JWT com verificação de token;
-5. **Autenticação OAuth via Google com Passport.js**;
-6. **CRUD completo para links, incluindo edição e remoção**;
-7. **Página dedicada "Meus Posts" para gerenciamento pessoal dos links**;
-8. **Página de sugestões com IA**.
+5. Autenticação OAuth via Google com Passport.js**;
+6. CRUD completo para links, incluindo edição e remoção**;
+7. Página dedicada "Meus Posts" para gerenciamento pessoal dos links**;
+8. Página de sugestões com IA**.
 
 ---
 
