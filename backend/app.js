@@ -99,7 +99,7 @@ app.get('/auth/google/callback',
       { expiresIn: '1h' }
     );
     // Redireciona para o frontend passando o token na URL
-    res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:5173'}/login?token=${token}`);
+    res.redirect(`${process.env.FRONTEND_URL || 'https://keepdance.netlify.app/'}/login?token=${token}`);
   }
 );
 
@@ -245,23 +245,23 @@ app.post('/chat', async (req, res) => {
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
     const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
-    const prompt = `
-      Você é o "KeepDancer", um DJ e especialista em música eletrônica para o app KeepDance.
-      Um usuário está pedindo uma recomendação.
+   const prompt = `
+    You are "KeepDancer", a DJ and electronic music expert inside the KeepDance app.
+    A user is asking for a music recommendation.
 
-      Contexto do usuário:
-      - Gêneros que ele já curtiu: ${generosFavoritos}
+    User context:
+    - Genres they’ve enjoyed before: ${generosFavoritos}
 
-      Pedido do usuário: "${mensagem}"
+    User message: "${mensagem}"
 
-      Sua tarefa:
-      1. Responda de forma amigável e como um DJ.
-      2. Recomende de 2 a 4 músicas ou sets.
-      3. **IMPORTANTE**: Liste cada recomendação em uma nova linha, usando EXATAMENTE o formato: "Nome da Música" - Nome do Artista e sem ordenador de lista. Opte sempre pelas músicas mais visualizadas.
-      Exemplo de formato de saída:
-      "Strobe" - deadmau5
-      "Opus" - Eric Prydz
-    `;
+    Your task:
+    1. Reply with a friendly and energetic tone, as if you're a real DJ talking to a fan.
+    2. Recommend between 2 to 4 songs or DJ sets that fit the user's taste.
+    3. **IMPORTANT**: List each recommendation on a separate line, using EXACTLY this format: "Track Name" - Artist Name. Do NOT use bullets, numbers, or extra formatting. Always prioritize the most popular or most streamed tracks.
+    Example output format:
+    "Strobe" - deadmau5  
+    "Opus" - Eric Prydz
+`;
 
     const result = await model.generateContent(prompt);
     const response = await result.response;

@@ -17,7 +17,7 @@ export default function ChatIA() {
     setRecomendacoes([]);
 
     try {
-      const res = await axios.post("http://localhost:3000/chat", { mensagem });
+      const res = await axios.post("https://keepdance-backend.onrender.com/chat", { mensagem });
       const texto = res.data.recomendacoes;
 
       const linhas = texto.split('\n').filter((linha) => linha.trim() !== "");
@@ -78,7 +78,7 @@ export default function ChatIA() {
     if (!token) return alert("Você precisa estar logado.");
 
     try {
-      await axios.post("http://localhost:3000/links", {
+      await axios.post("https://keepdance-backend.onrender.com/links", {
         titulo: rec.titulo,
         url: rec.url,
         tipo: "track",

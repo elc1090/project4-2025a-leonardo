@@ -265,3 +265,58 @@ a {
   background-color: #2a2a2d;
   color: #eb2525;
 }
+
+.paginacao {
+  
+  margin: 24px auto 40px auto;
+  max-width: 400px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  user-select: none;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.paginacao button {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  border-radius: 50%;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  border: 2px solid #eb2525;
+  color: #eb2525;
+  background-color: transparent;
+  user-select: none;
+}
+
+.paginacao button:hover:not(:disabled):not(.active) {
+  background-color: #eb2525;
+  color: white;
+  box-shadow: 0 0 8px rgba(235, 37, 37, 0.7);
+}
+
+.paginacao button.active {
+  background-color: #eb2525;
+  color: white;
+  box-shadow: 0 0 10px rgba(235, 37, 37, 0.9);
+  cursor: default;
+  border-color: #eb2525;
+}
+
+.paginacao button:disabled {
+  border-color: #ccc;
+  color: #ccc;
+  cursor: default;
+  background-color: transparent;
+  box-shadow: none;
+}
+
